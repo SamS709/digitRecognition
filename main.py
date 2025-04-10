@@ -64,7 +64,7 @@ class Robot:
         coordinates = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if  1500>area > 500:  # pieces have an area between 7000 and 2000
+            if  10000>area > 200:  # pieces have an area between 7000 and 2000
                 peri = cv2.arcLength(cnt, True)
                 approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
                 x, y, w, h = cv2.boundingRect(approx)
@@ -142,7 +142,6 @@ class Robot:
             image[:y1 - y0, :] = image_init[y0:y1, x0:x1].copy()
             image = np.flip(image, axis=0)
             image = np.flip(image, axis=1)
-            image.resize((28,28))
             images.append(image)
         return images
 
