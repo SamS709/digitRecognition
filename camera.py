@@ -27,13 +27,13 @@ class Camera:
         coordinates = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if  10000>area > 500:  # pieces have an area between 7000 and 2000
+            if  5000>area > 500:  # pieces have an area between 7000 and 2000
                 cv2.drawContours(image=image_copy, contours=cnt, contourIdx=-1, color=(1, 0, 0), thickness=2,
                                  lineType=cv2.LINE_4)
                 peri = cv2.arcLength(cnt, True)
                 approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
                 x, y, w, h = cv2.boundingRect(approx)
-                if w/2<h<2*w:
+                if w/8<h<8*w:
                     coordinates.append([x, x+w, y, y+h])
                     cv2.rectangle(image_copy, (x, y), (x + w, y + h), (0, 255, 0), 5)
         return image_copy,coordinates
@@ -45,11 +45,11 @@ class Camera:
         coordinates = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if  10000>area > 500:  # pieces have an area between 7000 and 2000
+            if  50000>area > 500:  # pieces have an area between 7000 and 2000
                 peri = cv2.arcLength(cnt, True)
                 approx = cv2.approxPolyDP(cnt, 0.02 * peri, True)
                 x, y, w, h = cv2.boundingRect(approx)
-                if w/2<h<2*w:
+                if w/10<h<10*w:
                     coordinates.append([x, x+w, y, y+h])
 
         '''x0,x1,y0,y1 = 245,346,118,217
@@ -96,7 +96,7 @@ class Camera:
 
         while True:
             # Capture frame-by-frame
-            frame = self.photo()[1]
+            frame = self.contour()[0]
             # Display the frame
             cv2.imshow('frame', frame)
             # Set the callback function for mouse events
@@ -126,7 +126,8 @@ class Camera:
 
     def pix_vals(self,image):
         image = 255-image
-        image[image<=128]=0
+        std = np.std(image)
+        image[image<=np.max(image)-1.7*std]=0
         max = np.max(image)
         diff = 255-max
         image[image!=0] = image[image!=0]+diff
@@ -147,7 +148,8 @@ class Camera:
             image = np.flip(image, axis=0)
             image = np.flip(image, axis=1)
             images.append(image)
-            if np.mean(image[0]) != 0 or np.mean(image[27]) != 0:
+            if np.mean(image[0]) >= 20 or np.mean(image[27]) >= 20 or np.mean(image[:,27]) >= 20 or np.mean(image[:,0]) >= 20:
+
                 images.pop()
         print(images[0])
         return np.array(images)
@@ -157,8 +159,8 @@ class Camera:
 if __name__=="__main__":
     robot1 = Camera()
     #robot1.get_HSV_and_mousePos()
-    coordinates = robot1.contour()[1]
-    print(coordinates)
+    #coordinates = robot1.contour()[1]
+    #print(coordinates)
     #robot1.get_HSV_and_mousePos()
     images = robot1.numbers_images()
     for image in images:
