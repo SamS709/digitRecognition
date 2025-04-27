@@ -98,7 +98,7 @@ if __name__=="__main__":
     X_pred = nn.preprocess(X_pred,0)[0]
     (X_train, y_train), (X_test, y_test) = keras.datasets.mnist.load_data()
     print(X_test.shape)
-    #nn.learn(X_train,y_train,X_test,y_test,epochs=30)
+    #nn.learn(X_train,y_train,X_test,y_test,epochs=10)
     X_test,y_test = nn.preprocess(X_test,y_test)
     #print(nn.model.evaluate(X_test,y_test))
     y_pred = nn.model.predict(X_pred)

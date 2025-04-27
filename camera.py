@@ -149,7 +149,6 @@ class Camera:
             image = np.flip(image, axis=1)
             images.append(image)
             if np.mean(image[0]) >= 20 or np.mean(image[27]) >= 20 or np.mean(image[:,27]) >= 20 or np.mean(image[:,0]) >= 20:
-
                 images.pop()
         print(images[0])
         return np.array(images)
@@ -163,6 +162,7 @@ if __name__=="__main__":
     #print(coordinates)
     #robot1.get_HSV_and_mousePos()
     images = robot1.numbers_images()
+    plt.show()
     for image in images:
         plt.figure()
         plt.imshow(image)
